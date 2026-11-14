@@ -1,5 +1,4 @@
 import json
-import os
 from datetime import datetime
 
 from rich.console import Console
@@ -11,24 +10,8 @@ from .task import Task
 class TaskOperation:
     def __init__(self):
         self.tasks = []
+        self.load_tasks()
         self.console = Console()
-        if os.path.exists("tasks.json"):
-            try:
-                with open("tasks.json", "r") as f:
-                    self.tasks = json.load(f)
-
-                print("File Loading Success!")
-            except OSError as e:
-                print(f"File Loading Error: {e}")
-
-        else:
-            try:
-                with open("tasks.json", "w") as f:
-                    json.dump([], f, indent=4)
-                print("File Creating Success!")
-
-            except OSError as e:
-                print(f"File Creation Error: {e}")
 
     def add_task(self):
         task_priority_list = ["Low", "Medium", "High"]
@@ -56,27 +39,49 @@ class TaskOperation:
         self.save_task()
 
     def view_tasks(self):
+        try:
+            with open("tasks.json", "r") as f:
+                loaded_json = json.load(f)
+
+            self.tasks = [Task.from_dict(item) for item in loaded_json]
+
+        except FileNotFoundError:
+            self.tasks = []
+            self.save_task()
+
+        except json.JSONDecodeError:
+            self.console.print("[red]Invalid JSON file![/red]")
+            return
+
         self.console.print(
             Panel(
-                f"Total due {len(self.tasks)}",
-                title="[bold]Add Task[/bold]",
+                f"Total tasks: {len(self.tasks)}",
+                title="[bold]View Tasks[/bold]",
                 border_style="blue",
                 padding=(1, 2),
             )
         )
 
-        with open("tasks.json", "r", encoding="utf-8") as f:
-            json_content = json.load(f)
-            for items in json_content:
-                print(items)
-
     def save_task(self):
-        with open("tasks.json", "w", encoding="utf-8") as f:
+        with open("tasks.json", "w") as f:
             json.dump([task.to_dict() for task in self.tasks], f, indent=4)
 
-    print("Task Adding Success")
+        print("Task Adding Success")
 
-    @staticmethod
+    def load_tasks(self):
+        try:
+            with open("tasks.json", "r") as f:
+                loaded_json = json.load(f)
+
+            self.tasks = [Task.from_dict(item) for item in loaded_json]
+
+        except FileNotFoundError:
+            self.tasks = []
+
+        except json.JSONDecodeError:
+            self.console.print("[red]Invalid JSON file![/red]")
+            self.tasks = []
+
     def edit_tasks(
         new_task_name,
         new_task_created_at,
@@ -86,10 +91,8 @@ class TaskOperation:
     ):
         pass
 
-    @staticmethod
     def delete_tasks(task_name):
         pass
 
-    @staticmethod
     def handle_date():
         pass
