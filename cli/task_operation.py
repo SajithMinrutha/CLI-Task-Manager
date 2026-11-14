@@ -10,27 +10,16 @@ from .task import Task
 class TaskOperation:
     def __init__(self):
         self.tasks = []
-        self.load_tasks()
         self.console = Console()
+        self.load_tasks()
 
     def add_task(self):
-        task_priority_list = ["Low", "Medium", "High"]
-        task_priority = None
         task_name = input("Enter The Name Of The Task: ")
         task_due_date = input("Enter The Due Date: ")
         task_priority_input = input("Enter The Priority(Low,Medium,High): ")
         task_created_at = datetime.now()
         task_completed = False
-
-        match task_priority_input.lower():
-            case "low":
-                task_priority = task_priority_list[0]
-            case "medium":
-                task_priority = task_priority_list[1]
-            case "high":
-                task_priority = task_priority_list[2]
-            case _:
-                return "Invalid Priority"
+        task_priority = TaskOperation.check_priority(task_priority_input)
 
         new_task = Task(
             task_name, task_created_at, task_due_date, task_priority, task_completed
@@ -82,17 +71,39 @@ class TaskOperation:
             self.console.print("[red]Invalid JSON file![/red]")
             self.tasks = []
 
-    def edit_tasks(
-        new_task_name,
-        new_task_created_at,
-        new_task_due_date,
-        new_task_completed,
-        new_task_priority,
-    ):
-        pass
+    # def edit_tasks(self):
+    #     self.view_tasks()
+    #     print("Which one would you like to edit (enter the ID)")
+    #     user_input = input(":")
+    #     if 0 < user_input <= len(self.tasks):
+    #         correct_id = self.tasks[user_input - 1]
+    #         task_name = input("Enter The Name Of The Task: ")
+    #         task_due_date = input("Enter The Due Date: ")
+    #         task_priority_input = input("Enter The Priority(Low,Medium,High): ")
+    #         task_created_at = datetime.now()
+    #         task_completed = False
+    #         task_priority = TaskOperation.check_priority(task_priority_input)
+    #     else:
+    #         print("Invalid Input")
 
-    def delete_tasks(task_name):
-        pass
+    def delete_tasks(self):
+        self.view_tasks()
+        print("Which one would you like to delete (enter the ID)")
+        user_input = input(":")
+        if 0 < user_input <= len(self.tasks):
+            del self.tasks[user_input - 1]
+        else:
+            print("Invalid Input")
 
-    def handle_date():
-        pass
+    @staticmethod
+    def check_priority(task_priority_input):
+        task_priority_list = ["Low", "Medium", "High"]
+        match task_priority_input.lower():
+            case "low":
+                return task_priority_list[0]
+            case "medium":
+                return task_priority_list[1]
+            case "high":
+                return task_priority_list[2]
+            case _:
+                return "Invalid Priority"

@@ -6,9 +6,8 @@ from .task_operation import TaskOperation
 
 
 class Menu:
-    def __init__(self, name):
+    def __init__(self):
         self.task_operation = TaskOperation()
-        self.name = name
         self.user_choice = None
         self.console = Console()
         self.cli_menu()
@@ -24,7 +23,7 @@ class Menu:
             case "3":
                 self.task_operation.edit_tasks()
             case "4":
-                self.task_operation.delete_task()
+                self.task_operation.delete_tasks()
             case "5":
                 return "Bye!"
             case _:
@@ -44,7 +43,7 @@ class Menu:
         )
         self.console.print(
             Panel(
-                f"[cyan]Welcome {self.name} to Task Manager.Total due {Task.id}.[/cyan]\n"
+                f"[cyan]Welcome to Task Manager.Total due {Task.id}.[/cyan]\n"
                 "[dim]Please select an option from the menu below.[/dim]\n"
                 f"[magenta bold]{menu_options}[/magenta bold]\n",
                 title="[bold]MAIN MENU[/bold]",

@@ -2,7 +2,7 @@ from cli.menu import Menu
 
 
 def main():
-    Menu("minrutha")
+    Menu()
 
 
 if __name__ == "__main__":
