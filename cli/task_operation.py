@@ -33,3 +33,6 @@ class TaskOperation:
 
     def remove_tasks(self, task_name):
         pass
+
+    def handle_date():
+        pass
