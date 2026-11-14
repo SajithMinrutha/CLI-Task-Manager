@@ -1,10 +1,13 @@
 from rich.console import Console
 from rich.panel import Panel
-from task import Task  # noqa: F401
+
+from .task import Task
+from .task_operation import TaskOperation
 
 
 class Menu:
     def __init__(self, name):
+        self.task_operation = TaskOperation()
         self.name = name
         self.user_choice = None
         self.console = Console()
@@ -15,15 +18,15 @@ class Menu:
         self.user_choice = input("Enter your choice: ")
         match self.user_choice:
             case "1":
-                pass
+                self.task_operation.add_task()
             case "2":
-                pass
+                self.task_operation.view_tasks()
             case "3":
-                pass
+                self.task_operation.edit_tasks()
             case "4":
-                pass
+                self.task_operation.delete_task()
             case "5":
-                pass
+                return "Bye!"
             case _:
                 print("Invalid Input")
 
@@ -41,7 +44,7 @@ class Menu:
         )
         self.console.print(
             Panel(
-                f"[cyan]Welcome {self.name} to Task Manager.[/cyan]\n"
+                f"[cyan]Welcome {self.name} to Task Manager.Total due {Task.id}.[/cyan]\n"
                 "[dim]Please select an option from the menu below.[/dim]\n"
                 f"[magenta bold]{menu_options}[/magenta bold]\n",
                 title="[bold]MAIN MENU[/bold]",
